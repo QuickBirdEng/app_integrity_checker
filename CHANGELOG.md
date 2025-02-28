@@ -1,3 +1,5 @@
+
+
 ## 1.0.1
 
 * Initial Release.
@@ -17,3 +19,9 @@
 ## 1.0.5
 
 * Minor fix.
+
+### Fork
+
+## 1.1.0
+
+`getsignature()` now returns a list of all signers on Android

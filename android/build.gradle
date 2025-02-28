@@ -22,6 +22,8 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
+    namespace 'com.emrys.aic.app_integrity_checker'
+
     compileSdkVersion 31
 
     compileOptions {

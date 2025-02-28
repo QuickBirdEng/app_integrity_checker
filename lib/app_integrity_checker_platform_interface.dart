@@ -28,7 +28,7 @@ abstract class AppIntegrityCheckerPlatform extends PlatformInterface {
     throw UnimplementedError('getchecksum() has not been implemented.');
   }
 
-  Future<String?> getsignature() {
+  Future<List<String>?> getsignature() {
     throw UnimplementedError('getsignature() has not been implemented.');
   }
 }
