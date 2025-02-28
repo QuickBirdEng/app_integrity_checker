@@ -5,7 +5,7 @@ class AppIntegrityChecker {
     return AppIntegrityCheckerPlatform.instance.getchecksum();
   }
 
-  static Future<String?> getsignature() {
-      return AppIntegrityCheckerPlatform.instance.getsignature();
+  static Future<List<String>?> getsignature() {
+    return AppIntegrityCheckerPlatform.instance.getsignature();
   }
 }

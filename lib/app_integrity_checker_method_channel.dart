@@ -21,12 +21,12 @@ class MethodChannelAppIntegrityChecker extends AppIntegrityCheckerPlatform {
   }
 
   @override
-  Future<String?> getsignature() async {
-    final checksum = await methodChannel.invokeMethod<String>('getsig');
+  Future<List<String>?> getsignature() async {
+    final checksum = await methodChannel.invokeMethod<List>('getsig');
     if (checksum != null) {
-      return checksum.trim();
+      return checksum.whereType<String>().map((e) => e.trim()).toList();
     } else {
-      return "";
+      return [];
     }
   }
 }

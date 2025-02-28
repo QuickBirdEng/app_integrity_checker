@@ -18,6 +18,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -59,7 +60,7 @@ public class AppIntegrityCheckerPlugin implements FlutterPlugin, MethodCallHandl
       result.success(checksum);
 
     }else if(call.method.equals("getsig")){
-      String sig = getSignature();
+      List<String> sig = getSignature();
       result.success(sig);
     }else {
       result.notImplemented();
@@ -93,9 +94,8 @@ public class AppIntegrityCheckerPlugin implements FlutterPlugin, MethodCallHandl
 
   }
 
-  private String getSignature() {
-    StringBuilder currentSignature;
-    currentSignature = new StringBuilder();
+  private List<String> getSignature() {
+    List<String> currentSignatures = new ArrayList<>();
     try {
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -106,23 +106,11 @@ public class AppIntegrityCheckerPlugin implements FlutterPlugin, MethodCallHandl
         }
         if (packageInfo.signingInfo.hasMultipleSigners()) {
           for (Signature signature : packageInfo.signingInfo.getApkContentsSigners()) {
-
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-
-            md.update(signature.toByteArray());
-
-            currentSignature.append(Base64.encodeToString(md.digest(), Base64.DEFAULT));
-
+            currentSignatures.add(signatureToSha256(signature.toByteArray()));
           }
         } else {
           for (Signature signature : packageInfo.signingInfo.getSigningCertificateHistory()) {
-
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-
-            md.update(signature.toByteArray());
-
-            currentSignature.append(Base64.encodeToString(md.digest(), Base64.DEFAULT));
-
+            currentSignatures.add(signatureToSha256(signature.toByteArray()));
           }
         }
       } else {
@@ -135,22 +123,39 @@ public class AppIntegrityCheckerPlugin implements FlutterPlugin, MethodCallHandl
           return null;
         }
         for (Signature signature : packageInfo.signatures) {
-
-          MessageDigest md = MessageDigest.getInstance("SHA-256");
-
-          md.update(signature.toByteArray());
-
-          currentSignature.append(Base64.encodeToString(md.digest(), Base64.DEFAULT));
-
+          currentSignatures.add(signatureToSha256(signature.toByteArray()));
         }
       }
     } catch (PackageManager.NameNotFoundException e) {
-      currentSignature.append("Signature read failed");
+      return null;
     } catch (NoSuchAlgorithmException e) {
-      currentSignature.append("Signature read failed");
+      return null;
     }
-    return currentSignature.toString();
+    return currentSignatures;
   }
+
+  private String signatureToSha256(byte[] sig) throws NoSuchAlgorithmException {
+    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    digest.update(sig);
+    byte[] hashText = digest.digest();
+    return bytesToHex(hashText);
+  }
+
+  private String bytesToHex(byte[] bytes) {
+    char[] hexArray = {
+            '0', '1', '2', '3', '4', '5', '6', '7',
+            '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+    };
+    char[] hexChars = new char[bytes.length * 2];
+    int v;
+    for (int j = 0; j < bytes.length; j++) {
+      v = bytes[j] & 0xFF;
+      hexChars[j * 2] = hexArray[v >>> 4];
+      hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+    }
+    return new String(hexChars);
+  }
+
 
 
 

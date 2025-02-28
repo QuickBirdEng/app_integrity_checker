@@ -1,7 +1,7 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:app_integrity_checker/app_integrity_checker.dart';
-import 'package:app_integrity_checker/app_integrity_checker_platform_interface.dart';
 import 'package:app_integrity_checker/app_integrity_checker_method_channel.dart';
+import 'package:app_integrity_checker/app_integrity_checker_platform_interface.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 class MockAppIntegrityCheckerPlatform
@@ -11,7 +11,7 @@ class MockAppIntegrityCheckerPlatform
   Future<String?> getchecksum() => Future.value("");
 
   @override
-  Future<String?> getsignature() => Future.value("");
+  Future<List<String>?> getsignature() => Future.value([]);
 }
 
 void main() {
