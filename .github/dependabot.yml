@@ -1,0 +1,26 @@
+version: 2
+enable-beta-ecosystems: true
+
+updates:
+  - package-ecosystem: "pub"
+    directory: "/"
+    reviewers:
+      - "westracer"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "pub"
+  - package-ecosystem: "gradle"
+    directories:
+      - "/android"
+      - "/android/app"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "westracer"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "gradle"
