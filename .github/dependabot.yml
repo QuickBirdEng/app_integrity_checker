@@ -23,3 +23,5 @@ updates:
     labels:
       - "dependencies"
       - "gradle"
+    ignore:
+      - dependency-name: "com.android.tools.build:gradle"
